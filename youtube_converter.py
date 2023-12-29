@@ -1,4 +1,4 @@
-'''Download YouTube videos as MP4 or MP3 files..'''
+'''Download YouTube videos as MP4 or MP3 files.'''
 
 import os
 import ssl
