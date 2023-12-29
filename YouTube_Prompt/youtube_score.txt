@@ -1,0 +1,12 @@
+What is the clickbait likelihood of the title and transcript for this video?
+Please provide a score and a brief explanation for your score,
+the clickbait score is up to 10,
+if the clickbait score is less than 5 then answer: 👍 Clickbait Score : Low,
+otherwise answer: 👎 Clickbait Score : High.
+
+Example response:
+> The lower the Clickbait score, the better.
+#### Clickbait Score:
+👍 Clickbait Score : Low or 👎 Clickbait Score : High
+#### Explanation:
+The title is a bit exaggerated.

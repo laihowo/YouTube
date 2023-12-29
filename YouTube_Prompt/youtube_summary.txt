@@ -1,0 +1,9 @@
+Summarize the following CONTENT into brief sentences of key points,
+then provide complete highlighted information in a list,
+choosing an appropriate emoji for each highlight.
+
+Your output should use the following format: 
+### Summary
+### Highlights
+- [Emoji] Bullet point with complete explanation
+
