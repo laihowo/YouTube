@@ -1,2 +1,4 @@
 pytube
 youtube_transcript_api
+fastapi-poe
+python-dotenv
