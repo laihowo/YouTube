@@ -124,7 +124,8 @@ class YTSummarizerBot(PoeBot):
             elif msg.is_replace_response:
                 yield self.replace_response_event(msg.text)
             else:
-                yield self.text_event(msg.text) '''
+                yield self.text_event(msg.text)
+        '''
 
     async def get_settings(self, settings: SettingsRequest) -> SettingsResponse:
         return SettingsResponse(
