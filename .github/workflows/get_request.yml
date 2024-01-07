@@ -1,4 +1,4 @@
-name: Send GET request
+name: Life Server
 
 on:
   schedule:
@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: Send GET request
         run: |
-          curl https://didactic-carnival-xrxjg9q44jw3pj44-8080.preview.app.github.dev/
+          curl https://jupyter-server-5v5w74p95jg3pg5w-8080.preview.app.github.dev/
