@@ -20,7 +20,7 @@ from sse_starlette.sse import ServerSentEvent
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
 
-BOT = 'playground-v2'
+BOT = 'GPT-3.5-Turbo'
 
 def get_summary_prompt(transcript: str):
     return f"""
@@ -46,8 +46,9 @@ def check_video_length(video: YouTube):
 
 
 def compute_transcript_text(video_id: str):
-    raw_transcript = YouTubeTranscriptApi.get_transcript(video_id)
-    text_transcript = "\n".join([item["text"] for item in raw_transcript])
+    raw_transcript = YouTubeTranscriptApi.get_transcript(video_id, \
+        languages=['en', 'zh', 'zh-Hans', 'zh-Hant', 'zh-HK'])
+    text_transcript = '\n'.join([item['text'] for item in raw_transcript])
     return text_transcript
 
 
@@ -114,6 +115,7 @@ class YTSummarizerBot(PoeBot):
                 message.content = get_summary_prompt(transcript)
 
         query.query = relevant_subchat
+        '''
         async for msg in stream_request(query, BOT, query.access_key):
             if isinstance(msg, MetaMessage):
                 continue
@@ -122,7 +124,7 @@ class YTSummarizerBot(PoeBot):
             elif msg.is_replace_response:
                 yield self.replace_response_event(msg.text)
             else:
-                yield self.text_event(msg.text)
+                yield self.text_event(msg.text) '''
 
     async def get_settings(self, settings: SettingsRequest) -> SettingsResponse:
         return SettingsResponse(
@@ -130,5 +132,5 @@ class YTSummarizerBot(PoeBot):
                 "Hi, I am the YouTube Summarizer. Please provide me a YouTube link for a "
                 "video that is up to 20 minutes in length and I can summarize it for you."
             ),
-            server_bot_dependencies={BOT: 1},
+            #server_bot_dependencies={BOT: 2},
         )
