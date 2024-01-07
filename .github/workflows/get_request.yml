@@ -1,0 +1,13 @@
+name: Send GET request
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  send-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send GET request
+        run: |
+          curl https://didactic-carnival-xrxjg9q44jw3pj44-8080.preview.app.github.dev/
