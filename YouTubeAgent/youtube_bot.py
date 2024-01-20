@@ -1,5 +1,5 @@
 '''
-Runs the YouTube Bot as a FastAPI app.
+Starts the YouTube Bot Server and Runs a FastAPI app.
 '''
 
 import requests
@@ -38,7 +38,7 @@ def fastapi_app():
 
     key = dotenv_values()['POE_ACCESS_KEY']
 
-    # Run the fetch_settings function
+    # Runs the fetch_settings function
     fetch_settings(key)
 
     bot = YouTubeAgent()
