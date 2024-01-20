@@ -2,7 +2,7 @@
 Runs the YouTube Bot as a FastAPI app.
 '''
 
-import os, threading, requests
+import requests
 from dotenv import dotenv_values
 
 import fastapi_poe as fp
@@ -25,10 +25,9 @@ def fetch_settings(key):
 
 def fastapi_app():
     '''
-    This function represents the FastAPI application for parallel programming with the bot server.
-    It creates a thread to run the fetch_settings function and
-    initializes an instance of YouTubeAgent.
-    Finally, it runs the bot using the access key obtained from the dotenv file.
+    This function represents the FastAPI application of the bot server.
+    It runs the fetch_settings function and initializes an instance of YouTubeAgent.
+    Finally, it starts the bot using the access key obtained from the dotenv file.
 
     Parameters:
     None
@@ -39,9 +38,8 @@ def fastapi_app():
 
     key = dotenv_values()['POE_ACCESS_KEY']
 
-    # Create a thread that will run the fetch_settings function
-    settings_thread = threading.Thread(target=fetch_settings, args=(key,))
-    settings_thread.start()
+    # Run the fetch_settings function
+    fetch_settings(key)
 
     bot = YouTubeAgent()
     fp.run(bot, access_key=key)
