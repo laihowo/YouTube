@@ -132,10 +132,10 @@ class YouTubeAgent(PoeBot):
 
         return SettingsResponse(
             introduction_message=(
-                'Hi, I am the YouTube Agent. Please provide me a YouTube link for a '
+                'Hi, I am YouTube Agent. Please provide a YouTube link for the '
                 'English or Chinese video that is up to 20 minutes and '
-                'I can highlight the key points for you. '
-                '您好，我是 YouTube Agent。請為我提供一個長度不超過 20 分鐘的英文或中文 YouTube 影片連結，我可以為您抽取重點。'
+                'let me highlight the key points for you. '
+                '您好，我是 YouTube Agent。請提供一條最長 20 分鐘的英文或中文 YouTube 影片連結，讓我為您抽取重點。'
             ),
-            server_bot_dependencies={BOT: 10},
+            server_bot_dependencies={ BOT: 10 },
         )
