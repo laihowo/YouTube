@@ -2,7 +2,6 @@
 Bot that scrapes Youtube transcripts and gives summaries.
 '''
 
-from __future__ import annotations
 from typing import AsyncIterable
 
 from fastapi_poe import PoeBot
@@ -78,7 +77,7 @@ def _get_relevant_subchat(query: QueryRequest) -> list[ProtocolMessage]:
             return list(reversed(subchat))
     return []
 
-class YTSummarizerBot(PoeBot):
+class YouTubeAgent(PoeBot):
     '''Bot that scrapes Youtube transcripts and gives summaries.'''
 
     async def get_response(self, request: QueryRequest) -> AsyncIterable[ServerSentEvent]:
@@ -133,8 +132,10 @@ class YTSummarizerBot(PoeBot):
 
         return SettingsResponse(
             introduction_message=(
-                'Hi, I am the YouTube Summarizer. Please provide me a YouTube link for a '
-                'video that is up to 20 minutes in length and I can summarize it for you.'
+                'Hi, I am the YouTube Agent. Please provide me a YouTube link for a '
+                'English or Chinese video that is up to 20 minutes and '
+                'I can highlight the key points for you. '
+                '您好，我是 YouTube Agent。請為我提供一個長度不超過 20 分鐘的英文或中文 YouTube 影片連結，我可以為您抽取重點。'
             ),
-            server_bot_dependencies={BOT: 2},
+            server_bot_dependencies={BOT: 10},
         )
