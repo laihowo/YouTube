@@ -19,23 +19,24 @@ from sse_starlette.sse import ServerSentEvent
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
 
-BOT = 'gemini-pro'
+from deep_translator import GoogleTranslator
+translator = GoogleTranslator(source='auto')
+
+BOT = 'claude-instant-100k'
 
 def get_summary_prompt(transcript: str):
     '''Returns a prompt for the user to summarize the video transcript.'''
 
-    return f'''
-        Summarize the following CONTENT into brief sentences of key points,
+    prompt = '''Summarize the following CONTENT into brief sentences of key points,
         then provide complete highlighted information in a list,
-        choosing an appropriate emoji for each highlight,
-        using the same language as the CONTENT to respond.
+        choosing an appropriate emoji for each highlight.
 
         Your output should use the following format:
         ### Summary
         ### Highlights
-        - [Emoji] Bullet point with complete explanation
+        - [Emoji] Bullet point with complete explanation'''
 
-        Transcript: {transcript}'''
+    return f'{translator.translate(prompt)} \n {transcript}'
 
 def get_video_object(link: str):
     '''Returns a YouTube object for the given link.'''
@@ -50,22 +51,29 @@ def check_video_length(video: YouTube):
 
     return video.length <= 20 * 60
 
-def compute_transcript_text(video_id: str):
+def compute_transcript_text(video_id: str, video_title: str):
     '''Returns the transcript text of the video with the given id.'''
 
     transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
     for transcript in transcript_list:
+        language_code = transcript.language_code
+        if 'zh' in language_code:
+            language_code = 'zh-TW'
+        translator.target = language_code
+
         raw_transcript = transcript.fetch()
         break
 
-    text_transcript = '\n'.join([item['text'] for item in raw_transcript])
+    text_transcript = video_title + '\n'
+    text_transcript += '\n'.join([item['text'] for item in raw_transcript])
     return text_transcript
 
 def get_video_transcript(video: YouTube):
     '''Returns the transcript text of the given video.'''
 
     video_id = video.video_id
-    transcript = compute_transcript_text(video_id)
+    video_title = video.title
+    transcript = compute_transcript_text(video_id, video_title)
     return transcript
 
 def _get_relevant_subchat(query: QueryRequest) -> list[ProtocolMessage]:

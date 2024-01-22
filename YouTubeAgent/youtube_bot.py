@@ -17,8 +17,9 @@ def fetch_settings(key):
     Returns:
         None
     '''
+    bot_handle = 'YouTubeAgentTest'
     response = requests.post(
-        f'https://api.poe.com/bot/fetch_settings/YouTubeAgent/{key}',
+        f'https://api.poe.com/bot/fetch_settings/{bot_handle}/{key}',
         timeout=10,
     )
     print(response.text)
