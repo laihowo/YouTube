@@ -27,9 +27,10 @@ def get_summary_prompt(transcript: str):
     return f'''
         Summarize the following CONTENT into brief sentences of key points,
         then provide complete highlighted information in a list,
-        choosing an appropriate emoji for each highlight.
+        choosing an appropriate emoji for each highlight,
+        using the same language as the CONTENT to respond.
 
-        Your output should use the following format: 
+        Your output should use the following format:
         ### Summary
         ### Highlights
         - [Emoji] Bullet point with complete explanation
@@ -52,8 +53,11 @@ def check_video_length(video: YouTube):
 def compute_transcript_text(video_id: str):
     '''Returns the transcript text of the video with the given id.'''
 
-    raw_transcript = YouTubeTranscriptApi.get_transcript(video_id, \
-        languages=['en', 'zh', 'zh-Hans', 'zh-Hant', 'zh-HK'])
+    transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    for transcript in transcript_list:
+        raw_transcript = transcript.fetch()
+        break
+
     text_transcript = '\n'.join([item['text'] for item in raw_transcript])
     return text_transcript
 
