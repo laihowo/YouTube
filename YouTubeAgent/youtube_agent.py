@@ -22,7 +22,7 @@ from youtube_transcript_api._errors import TranscriptsDisabled
 from deep_translator import GoogleTranslator
 translator = GoogleTranslator(source='auto')
 
-BOT = 'claude-instant-100k'
+BOT = 'gemini-pro'
 
 def get_summary_prompt(transcript: str):
     '''Returns a prompt for the user to summarize the video transcript.'''
