@@ -128,6 +128,7 @@ ENV/
 env.bak/
 venv.bak/
 .DS_Store
+YouTubeAgent/benny-lai-firebase-adminsdk-jr0wc-15e8c34629.json
 
 # Spyder project settings
 .spyderproject

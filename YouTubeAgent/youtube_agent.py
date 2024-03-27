@@ -22,7 +22,20 @@ from youtube_transcript_api._errors import TranscriptsDisabled
 from deep_translator import GoogleTranslator
 translator = GoogleTranslator(source='auto')
 
+import firebase_admin
+from firebase_admin import credentials, firestore
+from datetime import datetime
+
+# Use the application default credentials
+cred = credentials.Certificate('YouTubeAgent/benny-lai-firebase-adminsdk-jr0wc-15e8c34629.json')
+app = firebase_admin.initialize_app(cred)
+db = firestore.client()
+responses = {}
+
 BOT = 'gemini-pro'
+ERROR_DURATION = 'Error: The video is longer than 20 minutes. Please provide a new video url. '
+ERROR_DISABLED = 'Error: Transcripts are disabled for this video. Please provide a new video url. '
+ERROR_LENGTHY = 'Error: The transcript is too long. Please provide a new video url. '
 
 def get_summary_prompt(transcript: str):
     '''Returns a prompt for the user to summarize the video transcript.'''
@@ -104,29 +117,36 @@ class YouTubeAgent(PoeBot):
 
         video_message = relevant_subchat[0]
         video = YouTube(video_message.content)
+
+        doc_ref = db.collection('responses').document()
+        responses['URL'] = video_message.content
+        responses['Timestamp'] = datetime.fromtimestamp(video_message.timestamp / 1_000_000)
+        responses['Summary'] = ''
+
         if not check_video_length(video):
-            yield self.text_event(
-                'Error: The video is longer than 20 minutes. Please provide a new video url.'
-            )
+            yield self.text_event(ERROR_DURATION)
+            responses['Summary'] += ERROR_DURATION
+            doc_ref.set(responses)
             return
 
         try:
             transcript = get_video_transcript(video)
         except TranscriptsDisabled:
-            yield self.text_event(
-                'Error: Transcripts are disabled for this video. Please provide a new video url.'
-            )
+            yield self.text_event(ERROR_DISABLED)
+            responses['Summary'] += ERROR_DISABLED
+            doc_ref.set(responses)
             return
 
         if len(transcript) > 30000:
-            yield self.text_event(
-                'Error: The transcript is too long. Please provide a new video url.'
-            )
+            yield self.text_event(ERROR_LENGTHY)
+            responses['Summary'] += ERROR_LENGTHY
+            doc_ref.set(responses)
             return
 
         for message in relevant_subchat:
             if message.message_id == relevant_subchat[0].message_id:
                 message.content = get_summary_prompt(transcript)
+                responses['Prompt'] = message.content
 
         request.query = relevant_subchat
         async for msg in stream_request(request, BOT, request.access_key):
@@ -138,6 +158,8 @@ class YouTubeAgent(PoeBot):
                 yield self.replace_response_event(msg.text)
             else:
                 yield self.text_event(msg.text)
+                responses['Summary'] += msg.text
+                doc_ref.set(responses)
 
     async def get_settings(self, setting: SettingsRequest) -> SettingsResponse:
         '''Returns the settings for the bot.'''

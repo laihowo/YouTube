@@ -42,10 +42,10 @@ def fastapi_app():
     key = dotenv_values()['POE_ACCESS_KEY']
 
     # Runs the fetch_settings function in a separate thread
-    threading.Thread(
+    '''threading.Thread(
         target=fetch_settings,
         args=(key,)
-    ).start()
+    ).start()'''
 
     # Constructs the bot and starts it
     bot = YouTubeAgent()
