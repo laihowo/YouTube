@@ -13,6 +13,7 @@ def fetch_settings(key):
 
     Args:
         key (str): The API key for authentication.
+        
 
     Returns:
         None
