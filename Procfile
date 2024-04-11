@@ -1,1 +1,1 @@
-web: uvicorn YouTubeAgent/youtube_bot:fastapi_app --host=0.0.0.0 --port=${PORT:-8080}
+web: python3 YouTubeAgent/youtube_bot.py
